@@ -9,9 +9,9 @@ class DBHelper {
   static const _sql = '''
   CREATE TABLE $_tableName(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
-    importance TEXT NOT NULL
+    title VARCHAR(50) NOT NULL,
+    description VARCHAR(100) NOT NULL,
+    importance INTEGER NOT NULL
   );
   ''';
 

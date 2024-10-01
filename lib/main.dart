@@ -3,6 +3,7 @@ import 'package:web2_project/screens/create/create_page.dart';
 import 'package:web2_project/screens/edit/edit_page.dart';
 import 'package:web2_project/screens/list/task_list_page.dart';
 import 'package:web2_project/screens/list/newscreen/newscreen_page.dart';
+import 'package:web2_project/screens/view_task/task_screen/task_screen_page.dart';
 import 'package:web2_project/theme.dart';
 
 void main() {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/newscreen': (context) => NewscreenPage(),
         '/createpage': (context) => CreatePage(),
         '/editpage': (context) => EditPage(),
+        '/viewtask': (context) => TaskScreen(),
       }, // Define 'ListPage' como a tela inicial
     );
   }

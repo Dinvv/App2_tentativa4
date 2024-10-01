@@ -30,7 +30,7 @@ class TaskListPage extends StatelessWidget {
                       // Navegar para a EditPage, passando a tarefa selecionada
                       Navigator.pushNamed(
                         context,
-                        '/editpage',
+                        '/viewtask',
                         arguments: task, // Passando o objeto Task para a EditPage
                       );
                     },
