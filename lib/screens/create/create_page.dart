@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:web2_project/enums/select.dart';
 import 'package:web2_project/models/task.dart';
-import 'package:web2_project/repository/database_helper.dart';
 import 'package:web2_project/store/check_store.dart';
+import 'package:web2_project/repository/task_repository.dart';
+import 'package:web2_project/enums/select.dart'; // Import do enum
 
 class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
@@ -14,17 +14,15 @@ class CreatePage extends StatefulWidget {
 
 class _CreatePageState extends State<CreatePage> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _questController = TextEditingController();
-  final store = CheckStore(); // Store MobX para selecionar a importância
+  final TextEditingController _descriptionController = TextEditingController();
+  final store = CheckStore();
   final _formKey = GlobalKey<FormState>();
-
-  final DatabaseHelper dbHelper = DatabaseHelper(); // Inicializar o DB Helper
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Criar Tarefa'),
+        title: const Text('Create Task'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -32,7 +30,6 @@ class _CreatePageState extends State<CreatePage> {
           key: _formKey,
           child: ListView(
             children: [
-              // Campo de texto para o título
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -43,7 +40,7 @@ class _CreatePageState extends State<CreatePage> {
                         'Nome da tarefa',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 4.0),
+                      const SizedBox(height: 8.0),
                       TextFormField(
                         controller: _titleController,
                         decoration: const InputDecoration(
@@ -57,14 +54,11 @@ class _CreatePageState extends State<CreatePage> {
                         },
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: 4.0),
-                      const Text('Ex: Ir ao Petshop'),
                     ],
                   ),
                 ),
               ),
-
-              // Campo de texto para o objetivo/descrição
+              const SizedBox(height: 16.0),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -72,14 +66,14 @@ class _CreatePageState extends State<CreatePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Qual o objetivo da tarefa?',
+                        'Descrição da tarefa',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 4.0),
+                      const SizedBox(height: 8.0),
                       TextFormField(
-                        controller: _questController,
+                        controller: _descriptionController,
                         decoration: const InputDecoration(
-                          hintText: 'Digite a função dessa tarefa',
+                          hintText: 'Digite a descrição da tarefa',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -89,28 +83,26 @@ class _CreatePageState extends State<CreatePage> {
                         },
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: 4.0),
-                      const Text('Ex: Comprar ração no Petshop'),
                     ],
                   ),
                 ),
               ),
-
-              // Campo de seleção para a importância
+              const SizedBox(height: 16.0),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Qual a importância da sua tarefa?',
-                        style: Theme.of(context).textTheme.headlineSmall,
+                      const Text(
+                        'Importância da tarefa',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
+                      const SizedBox(height: 8.0),
                       Observer(builder: (_) {
                         return Column(
                           children: [
-                            RadioListTile(
+                            RadioListTile<select>(
                               value: select.urgent,
                               groupValue: store.selected,
                               onChanged: (value) {
@@ -118,7 +110,7 @@ class _CreatePageState extends State<CreatePage> {
                               },
                               title: const Text('Urgente'),
                             ),
-                            RadioListTile(
+                            RadioListTile<select>(
                               value: select.important,
                               groupValue: store.selected,
                               onChanged: (value) {
@@ -126,7 +118,7 @@ class _CreatePageState extends State<CreatePage> {
                               },
                               title: const Text('Importante'),
                             ),
-                            RadioListTile(
+                            RadioListTile<select>(
                               value: select.NotImportant,
                               groupValue: store.selected,
                               onChanged: (value) {
@@ -145,38 +137,20 @@ class _CreatePageState extends State<CreatePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButtonCustom2(
+      floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            // Criar a nova tarefa
             Task newTask = Task(
               title: _titleController.text,
-              objective: _questController.text,
-              importance: store.selected.toString(), // Pegando a seleção da importância
+              description: _descriptionController.text,
+              importance: store.selected.toString().split('.').last, // Ajuste para converter o enum para String
             );
-
-            // Inserir a nova tarefa no banco de dados
-            await dbHelper.insertTask(newTask);
-
-            // Redirecionar para a tela de listagem
+            await TaskRepository.insert(newTask.toMap());
             Navigator.pushReplacementNamed(context, '/listpage');
           }
         },
+        child: const Icon(Icons.save),
       ),
-    );
-  }
-}
-
-class FloatingActionButtonCustom2 extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  FloatingActionButtonCustom2({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: onPressed,
-      child: const Icon(Icons.save),
     );
   }
 }

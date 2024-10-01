@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web2_project/screens/create/create_page.dart';
 import 'package:web2_project/screens/edit/edit_page.dart';
-import 'package:web2_project/screens/list/list_page.dart';
+import 'package:web2_project/screens/list/task_list_page.dart';
 import 'package:web2_project/screens/list/newscreen/newscreen_page.dart';
 import 'package:web2_project/theme.dart';
 
@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
       theme: MaterialTheme(Theme.of(context).textTheme).light(),
       darkTheme: MaterialTheme(Theme.of(context).textTheme).dark(),
       themeMode: ThemeMode.system,
-      home: ListPage(), 
+      home: TaskListPage(), 
       initialRoute: '/listpage',
       routes: {
-        '/listpage': (context) => ListPage(),
+        '/listpage': (context) => TaskListPage(),
         '/newscreen': (context) => NewscreenPage(),
         '/createpage': (context) => CreatePage(),
         '/editpage': (context) => EditPage(),

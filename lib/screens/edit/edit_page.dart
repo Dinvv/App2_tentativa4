@@ -3,6 +3,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:web2_project/enums/select.dart';
 import 'package:web2_project/store/check_store.dart';
+import 'package:web2_project/models/task.dart'; // Importe seu modelo de Task
+import 'package:web2_project/repository/task_repository.dart'; // Importe seu repositório
 
 class EditPage extends StatefulWidget {
   const EditPage({super.key});
@@ -16,12 +18,30 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController _questController = TextEditingController();
   final store = CheckStore();
   final _formKey = GlobalKey<FormState>();
+  late Task _task; // Variável para armazenar a tarefa recebida
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Recebendo a tarefa passada como argumento
+    _task = ModalRoute.of(context)!.settings.arguments as Task;
+
+    // Preenchendo os campos com os dados da tarefa
+    _titleController.text = _task.title;
+    _questController.text = _task.description;
+    store.changeselectMethod(
+  select.values.firstWhere(
+    (e) => e.toString().split('.').last == _task.importance,
+  ),
+);
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EditPage'),
+        title: const Text('Edit Task'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -43,7 +63,7 @@ class _EditPageState extends State<EditPage> {
                       TextFormField(
                         controller: _titleController,
                         decoration: const InputDecoration(
-                          hintText: 'Renomeie o Titulo da tarefa!',
+                          hintText: 'Renomeie o título da tarefa!',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -54,7 +74,7 @@ class _EditPageState extends State<EditPage> {
                         textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(height: 4.0),
-                      const Text('Ex: ir a Petshop'),
+                      const Text('Ex: ir ao Petshop'),
                     ],
                   ),
                 ),
@@ -70,7 +90,7 @@ class _EditPageState extends State<EditPage> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4.0),
-                      TextField(
+                      TextFormField(
                         controller: _questController,
                         decoration: const InputDecoration(
                           hintText: 'Altere a função desta tarefa',
@@ -123,12 +143,17 @@ class _EditPageState extends State<EditPage> {
         ),
       ),
       floatingActionButton: FloatingActionButtonCustom2(
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            // O formulário é válido, prossiga
-            Navigator.pushReplacementNamed(context, '/listpage');
-          } else {
-            // Tratar o caso de erro
+            // Atualizando os dados da tarefa
+            _task.title = _titleController.text;
+            _task.description = _questController.text;
+            _task.importance = store.selected.toString().split('.').last;
+
+            // Salvando a tarefa atualizada no banco de dados
+            await TaskRepository.update(_task.toMap());
+
+            Navigator.pushReplacementNamed(context, '/tasklistpage');
           }
         },
       ),
