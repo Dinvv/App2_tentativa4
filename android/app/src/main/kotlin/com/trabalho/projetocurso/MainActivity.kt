@@ -1,4 +1,4 @@
-package com.example.web2_project
+package com.trabalho.projetocurso
 
 import io.flutter.embedding.android.FlutterActivity
 

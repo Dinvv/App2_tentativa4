@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web2_project/models/task.dart'; // Importe seu modelo de Task
 import 'package:web2_project/repository/task_repository.dart'; // Importe o repositório
+import 'package:web2_project/screens/list/floating_action_button_custom.dart'; //botão personalizado
 
 class TaskListPage extends StatelessWidget {
   @override
@@ -41,6 +42,7 @@ class TaskListPage extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButtonCustom(), // Usando botão personalizado
     );
   }
 }
