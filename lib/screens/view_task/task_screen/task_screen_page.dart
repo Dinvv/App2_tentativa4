@@ -9,7 +9,7 @@ class TaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Tarefas'),
+        title: Text('Task Maneger'),
       ),
       body: FutureBuilder<List<Task>>(
         future: TaskRepository.findAll(), // Busca todas as tarefas
@@ -34,7 +34,7 @@ class TaskScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacementNamed(context, 'listpage');
+          Navigator.pushReplacementNamed(context, '/listpage');
         },
         child: SvgPicture.asset('assets/ic_done.svg'),
       ),
