@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:web2_project/models/task.dart';
 import 'package:web2_project/store/check_store.dart';
 import 'package:web2_project/repository/task_repository.dart';
@@ -149,7 +150,7 @@ class _CreatePageState extends State<CreatePage> {
             Navigator.pushReplacementNamed(context, '/listpage');
           }
         },
-        child: const Icon(Icons.save),
+        child: SvgPicture.asset('assets/icsave.svg')
       ),
     );
   }

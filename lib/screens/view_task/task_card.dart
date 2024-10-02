@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:web2_project/screens/view_task/task_screen/closebuttons/close_button.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // Importa o pacote SVG
 import 'package:web2_project/screens/view_task/task_screen/editbuttons/edit_button.dart';
+import 'package:web2_project/repository/task_repository.dart';
+import 'package:web2_project/models/task.dart';
 
 class TaskCardWidget extends StatelessWidget {
+  final Task task;
+
+  TaskCardWidget({required this.task});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -16,7 +22,7 @@ class TaskCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'título da tarefa',
+              task.title, // Exibe o título da tarefa
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -24,14 +30,14 @@ class TaskCardWidget extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'importância da tarefa',
+              task.importance, // Exibe a importância da tarefa
               style: TextStyle(
                 fontSize: 14,
               ),
             ),
             SizedBox(height: 16),
             Text(
-              'sua tarefa',
+              task.description, // Exibe a descrição da tarefa
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -40,10 +46,44 @@ class TaskCardWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // Adiciona os Widgets dos Botões
-                EditButton(),
+                // Botão de editar
+                EditButton(task: task),
                 SizedBox(width: 8),
-                CloseButtonWidget(),
+                // Botão de deletar com SVG
+                IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/ic_delete.svg', // Caminho do ícone SVG
+                    color: Colors.red, // Cor do ícone
+                    width: 24, // Largura do ícone
+                    height: 24, // Altura do ícone
+                  ),
+                  onPressed: () async {
+                    // Confirmação antes de deletar a tarefa
+                    bool? shouldDelete = await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Deletar Tarefa'),
+                        content: Text('Tem certeza que deseja deletar a tarefa "${task.title}"?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text('Deletar'),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (shouldDelete == true) {
+                      await TaskRepository.delete(task.id!); // Deleta a tarefa pelo ID
+                      // Atualiza a lista ou navega para outra página
+                      Navigator.pushReplacementNamed(context, '/listpage');
+                    }
+                  },
+                ),
               ],
             ),
           ],

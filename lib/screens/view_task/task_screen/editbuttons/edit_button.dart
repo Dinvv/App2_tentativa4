@@ -1,32 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:web2_project/models/task.dart';
 
 class EditButton extends StatelessWidget {
+  final Task task; // Parâmetro task
+
+  EditButton({required this.task}); // Construtor para receber o task
+
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
+    return IconButton(
+      icon: SvgPicture.asset('assets/ic_icon.svg'),
       onPressed: () {
-        Navigator.pushReplacementNamed(
-          context,
-          '/editpage'
-        );
-        // Ação do botão "Edit"
-        // Pode abrir uma tela de edição ou algo do tipo
+        // Implementação da lógica para edição da tarefa
+        Navigator.pushNamed(context, '/editpage', arguments: task);
       },
-      child: Text(
-        'edit',
-        style: TextStyle(
-          fontSize: 16, // Tamanho da fonte
-        ),
-      ),
-      style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Tamanho do botão
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), // Bordas arredondadas
-        ),
-        side: BorderSide(
-          width: 2, // Largura da borda
-        ),
-      ),
     );
   }
 }

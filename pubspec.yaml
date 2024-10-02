@@ -27,3 +27,5 @@ flutter:
     - assets/ic_vector.svg
     - assets/ic_icon.svg
     - assets/ic_done.svg
+    - assets/ic_delete.svg
+    - assets/icsave.svg

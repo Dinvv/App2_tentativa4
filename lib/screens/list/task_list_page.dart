@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:web2_project/models/task.dart'; // Importe seu modelo de Task
 import 'package:web2_project/repository/task_repository.dart'; // Importe o repositório
 import 'package:web2_project/screens/list/floating_action_button_custom.dart'; //botão personalizado
@@ -26,7 +27,7 @@ class TaskListPage extends StatelessWidget {
                   title: Text(task.title),
                   subtitle: Text(task.importance),
                   trailing: IconButton(
-                    icon: Icon(Icons.edit),
+                    icon: SvgPicture.asset('assets/ic_vector.svg'),
                     onPressed: () {
                       // Navegar para a EditPage, passando a tarefa selecionada
                       Navigator.pushNamed(

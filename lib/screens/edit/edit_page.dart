@@ -153,7 +153,7 @@ class _EditPageState extends State<EditPage> {
             // Salvando a tarefa atualizada no banco de dados
             await TaskRepository.update(_task.toMap());
 
-            Navigator.pushReplacementNamed(context, '/tasklistpage');
+            Navigator.pushReplacementNamed(context, '/listpage');
           }
         },
       ),
